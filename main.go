@@ -8,8 +8,8 @@ import (
 )
 
 type params struct {
-	Start time.Time `json:"start" form:"start" binding:"required_without=End,omitempty,lt|ltfield=End"`
-	End   time.Time `json:"end" form:"end" binding:"required_without=Start,omitempty,gt|gtfield=Start"`
+	Start *time.Time `json:"start" form:"start" binding:"required_without=End,omitempty,lt|ltfield=End"`
+	End   *time.Time `json:"end" form:"end" binding:"required_without=Start,omitempty,gt|gtfield=Start"`
 }
 
 func main() {
@@ -20,13 +20,14 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{"errors": fmt.Sprintf("%v", err)})
 			return
 		}
-		if params.Start.IsZero() {
-			params.Start = time.Now()
+		now := time.Now()
+		if params.Start == nil {
+			params.Start = &now
 		}
-		if params.End.IsZero() {
-			params.End = time.Now()
+		if params.End == nil {
+			params.End = &now
 		}
-		c.JSON(http.StatusOK, fmt.Sprintf("%v", params.End.Sub(params.Start)))
+		c.JSON(http.StatusOK, fmt.Sprintf("%v", params.End.Sub(*params.Start)))
 		return
 	})
 	r.Run()
