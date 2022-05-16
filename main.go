@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 type params struct {
-	Start *string `json:"start" form:"start" binding:"required_without=End,omitempty,datetime=2006-01-02T15:04:05Z07:00"`
-	End   *string `json:"end" form:"end" binding:"required_without=Start,omitempty,datetime=2006-01-02T15:04:05Z07:00"`
+	Start time.Time `json:"start" form:"start" binding:"required_without=End,omitempty,lt|ltfield=End"`
+	End   time.Time `json:"end" form:"end" binding:"required_without=Start,omitempty,gt|gtfield=Start"`
 }
 
 func main() {
@@ -19,7 +20,13 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{"errors": fmt.Sprintf("%v", err)})
 			return
 		}
-		c.JSON(http.StatusOK, fmt.Sprintf("%v", params))
+		if params.Start.IsZero() {
+			params.Start = time.Now()
+		}
+		if params.End.IsZero() {
+			params.End = time.Now()
+		}
+		c.JSON(http.StatusOK, fmt.Sprintf("%v", params.End.Sub(params.Start)))
 		return
 	})
 	r.Run()
