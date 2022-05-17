@@ -131,7 +131,7 @@
 							"});",
 							"",
 							"pm.test(\"Validation error\", () => {",
-							"    pm.expect(pm.response.text()).to.include(\"The field 'end' must be in the future\")",
+							"    pm.expect(pm.response.text()).to.include(\"The field end must be greater than Start\")",
 							"})"
 						],
 						"type": "text/javascript"
@@ -177,7 +177,7 @@
 							"});",
 							"",
 							"pm.test(\"Validation error\", () => {",
-							"    pm.expect(pm.response.text()).to.include(\"The field 'start' must be in the past\")",
+							"    pm.expect(pm.response.text()).to.include(\"The field start must be less than End\")",
 							"})"
 						],
 						"type": "text/javascript"
@@ -270,7 +270,7 @@
 							"});",
 							"",
 							"pm.test(\"Validation error\", () => {",
-							"    pm.expect(pm.response.text()).to.include(\"The field 'start' must be in the past\")",
+							"    pm.expect(pm.response.text()).to.include(\"The field start must be less than End\")",
 							"})"
 						],
 						"type": "text/javascript"
